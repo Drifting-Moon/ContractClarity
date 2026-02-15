@@ -3,125 +3,444 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>ContractClarity | AI-Powered Legal Document Simplifier </title>
+    <title>ContractClarity | AI Legal Document Analyzer</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
         body {
-            background: radial-gradient(circle at top, #272a36, #132b8c);
+            background: radial-gradient(circle at top, #0f172a, #1e293b, #111827);
+            overflow-x: hidden;
+        }
+
+        /* Snow */
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            background: white;
+            border-radius: 90%;
+            opacity: 1;
+            animation: slide linear infinite;
+            transition: opacity 1s ease-out;
+            /* Add transition for fade out */
+        }
+
+        @keyframes slide {
+            to {
+                transform: translateY(100vh) translateX(100px) rotate(360deg);
+                opacity: 0;
+            }
         }
 
         .glass {
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.06);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .glass:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 25px 60px rgba(99, 102, 241, 0.45);
         }
     </style>
 </head>
 
 <body class="text-white min-h-screen">
 
+    <!-- Snow Container -->
+    <div id="snowContainer" class="pointer-events-none fixed inset-0 z-40"></div>
+
     <!-- NAVBAR -->
-    <nav class="flex justify-between items-center px-10 py-6">
+    <nav class="flex justify-between items-center px-10 py-6 relative z-50">
         <div class="flex items-center gap-3">
-            <div class="bg-yellow-400 text-purple-900 font-bold px-3 py-2 rounded-lg">
-                ⚖
+
+            <!-- New Icon -->
+            <div class="bg-gradient-to-br from-indigo-500 to-purple-600 
+                    text-white font-bold px-3 py-2 rounded-xl shadow-lg">
+                ⚡
             </div>
+
             <div>
                 <h1 class="font-bold text-xl">ContractClarity</h1>
-                <p class="text-xs text-purple-200">AI-Powered Legal Document Simplifier </p>
+                <p class="text-xs text-slate-400">AI Legal Document Analyzer</p>
             </div>
         </div>
 
-        <div class="flex gap-4">
 
-            <!-- Personal API Key Button -->
-            <button onclick="toggleApiInput()"
+
+        <div class="flex gap-4">
+            <button onclick="toggleSnow()"
                 class="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-xl text-sm transition">
-                Personal API Key
+                ❄ Let It Snow
             </button>
 
-            <!-- Go Premium Button -->
-            <button
-                class="bg-yellow-400 hover:bg-yellow-300 text-purple-900 font-semibold px-4 py-2 rounded-xl transition">
+            <button onclick="enableCustomConfig()"
+                class="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-xl text-sm transition">
+                Custom AI Config
+            </button>
+
+            <button onclick="enablePremium()" class="bg-gradient-to-r from-purple-500 to-pink-500
+                   hover:scale-105 transition text-white font-semibold px-4 py-2 rounded-xl">
                 Go Premium
             </button>
-
         </div>
     </nav>
 
+    <!-- MODE BADGE ABOVE HERO -->
+    <div class="flex justify-center mt-10 mb-6 relative z-50">
+        <div id="modeBadge" class="px-6 py-2 rounded-full text-sm 
+               bg-gradient-to-r from-indigo-500 to-purple-500
+               shadow-lg font-semibold tracking-wide">
+            Free Mode
+        </div>
+    </div>
+
+
     <!-- HERO -->
-    <section class="text-center mt-16 px-6">
-        <div class="glass max-w-4xl mx-auto p-12 rounded-3xl shadow-2xl">
-            <h2 class="text-4xl font-extrabold mb-4">
+    <section class="text-center mt-20 px-6 relative z-50">
+        <div class="glass max-w-4xl mx-auto p-12 rounded-3xl">
+
+            <h2
+                class="text-4xl font-extrabold mb-4 bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
                 Understand Your Legal Documents
             </h2>
-            <p class="text-purple-200 text-lg">
-                Upload any legal document and get a clear, simple explanation.
+            <p class="text-slate-300 text-lg">
+                Upload any legal document and receive structured AI analysis.
                 <br>No legal expertise required.
             </p>
         </div>
     </section>
 
     <!-- UPLOAD SECTION -->
-    <section class="mt-16 px-6">
-        <div class="glass max-w-3xl mx-auto p-10 rounded-3xl shadow-xl">
+    <section class="mt-16 px-6 relative z-50">
+        <div class="glass max-w-3xl mx-auto p-10 rounded-3xl">
 
-            <form method="POST" enctype="multipart/form-data" class="space-y-6">
+            <form id="uploadForm" class="space-y-6">
+                <input type="hidden" name="mode" id="modeInput" value="free">
 
-                <!-- Hidden API Input -->
-                <div id="apiInputBox" class="hidden">
-                    <label class="block text-sm mb-2 text-purple-200">
-                        Enter Your Gemini API Key
-                    </label>
-                    <input type="password" name="user_api_key" placeholder="AIza..." class="w-full bg-purple-900/50 p-3 rounded-xl border border-purple-400
-                        focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                <div id="providerBox">
+                    <label class="block text-sm mb-2 text-slate-300">AI Provider</label>
+                    <select name="provider" class="w-full p-3 rounded-xl bg-slate-800 border border-slate-600">
+                        <option value="gemini">Google Gemini</option>
+                        <option>OpenAI (Coming Soon)</option>
+                        <option>Claude (Coming Soon)</option>
+                    </select>
                 </div>
 
-                <div class="border-2 border-dashed border-purple-300 p-10 rounded-2xl text-center">
-                    <p class="text-purple-200 mb-4">
-                        Upload Your Legal Document
-                    </p>
-
-                    <input type="file" name="file" required class="mx-auto text-sm">
+                <div id="modelBox">
+                    <label class="block text-sm mb-2 text-slate-300">Model Name</label>
+                    <input type="text" name="model_name"
+                        class="w-full p-3 rounded-xl bg-slate-800 border border-slate-600"
+                        placeholder="e.g., gemini-1.5-flash">
                 </div>
 
-                <button type="submit" class="w-full bg-gradient-to-r from-yellow-400 to-orange-400
-                    text-purple-900 font-bold py-3 rounded-xl hover:scale-105 transition">
-                    Analyze Document
+                <div id="apiBox">
+                    <label class="block text-sm mb-2 text-slate-300">API Key</label>
+                    <input type="password" name="custom_api_key"
+                        class="w-full p-3 rounded-xl bg-slate-800 border border-slate-600"
+                        placeholder="Enter your API key">
+                </div>
+
+                <div class="border-2 border-dashed border-indigo-500 p-10 rounded-2xl text-center">
+                    <p class="text-slate-300 mb-4">Upload Legal Document</p>
+                    <input type="file" name="file" accept=".pdf,.txt" required>
+                </div>
+
+                <button type="submit" class="w-full bg-gradient-to-r from-indigo-500 to-purple-500
+                       hover:scale-105 transition text-white font-bold py-3 rounded-xl">
+                    <span id="btnText">Analyze Document</span>
+                    <span id="btnLoader" class="hidden animate-spin ml-2">⏳</span>
                 </button>
-
             </form>
         </div>
     </section>
 
-    {% if result %}
-
-    <!-- RESULT SECTION -->
-    <section class="mt-16 px-6 pb-20">
+    <section id="resultSection" class="hidden mt-16 px-6 pb-20 relative z-50">
         <div class="glass max-w-4xl mx-auto p-10 rounded-3xl shadow-xl">
-            <h3 class="text-2xl font-bold mb-6 text-yellow-300">
+            <h3 class="text-2xl font-bold mb-6 text-indigo-400">
                 Document Analysis
             </h3>
+            <div id="resultContent" class="whitespace-pre-wrap text-slate-200 text-sm leading-relaxed"></div>
+        </div>
+    </section>
 
-            <div class="whitespace-pre-wrap text-purple-100 text-sm leading-relaxed">
-                {{ result }}
+    <!-- ROADMAP -->
+    <section class="mt-20 px-6 relative z-50">
+        <div class="max-w-4xl mx-auto">
+            <h3
+                class="text-3xl font-bold text-center mb-10 bg-gradient-to-r from-pink-400 to-indigo-400 bg-clip-text text-transparent">
+                Future Roadmap 🚀
+            </h3>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Feature 1 -->
+                <div class="glass p-6 rounded-2xl border border-white/10 hover:border-indigo-500/50 transition">
+                    <div class="text-3xl mb-3">🌍</div>
+                    <h4 class="font-bold text-lg mb-2 text-indigo-200">Multi-Language Support</h4>
+                    <p class="text-slate-400 text-sm">Analyze documents in Spanish, French, German, and 50+ other
+                        languages instantly.</p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="glass p-6 rounded-2xl border border-white/10 hover:border-indigo-500/50 transition">
+                    <div class="text-3xl mb-3">🔥</div>
+                    <h4 class="font-bold text-lg mb-2 text-indigo-200">Risk Heatmap</h4>
+                    <p class="text-slate-400 text-sm">Visual highlighting of dangerous clauses (Red/Yellow/Green)
+                        directly on your document.</p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="glass p-6 rounded-2xl border border-white/10 hover:border-indigo-500/50 transition">
+                    <div class="text-3xl mb-3">💬</div>
+                    <h4 class="font-bold text-lg mb-2 text-indigo-200">Chat with Your Contract</h4>
+                    <p class="text-slate-400 text-sm">Ask questions like "Can I be fired for no reason?" and get answers
+                        from the text.</p>
+                </div>
+
+                <!-- Contract Analytics Dashboard -->
+                <div class="glass p-6 rounded-2xl border border-white/10 hover:border-indigo-500/50 transition">
+                    <div class="text-3xl mb-3">📊</div>
+                    <h4 class="font-bold text-lg mb-2 text-indigo-200">Contract Analytics Dashboard</h4>
+                    <p class="text-slate-400 text-sm">Visualize contract risks, renewal dates, and spending across your
+                        entire portfolio.</p>
+                </div>
+
+                <!-- OCR & Document Scanning -->
+                <div class="glass p-6 rounded-2xl border border-white/10 hover:border-indigo-500/50 transition">
+                    <div class="text-3xl mb-3">📸</div>
+                    <h4 class="font-bold text-lg mb-2 text-indigo-200">AI-Powered OCR</h4>
+                    <p class="text-slate-400 text-sm">Scan physical documents with your camera and instantly digitize
+                        them with high-accuracy text recognition.</p>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="glass p-6 rounded-2xl border border-white/10 hover:border-indigo-500/50 transition">
+                    <div class="text-3xl mb-3">⚖️</div>
+                    <h4 class="font-bold text-lg mb-2 text-indigo-200">Legal Precedent Search</h4>
+                    <p class="text-slate-400 text-sm">Automatically find relevant court cases and past rulings that
+                        apply to your specific clauses.</p>
+                </div>
             </div>
         </div>
     </section>
 
-    {% endif %}
-
-    <footer class="text-center py-10 text-purple-300 text-sm">
+    <footer class="text-center py-10 text-slate-400 text-sm relative z-50">
         © 2026 ContractClarity. Making legal documents accessible.
     </footer>
 
+    <!-- PREMIUM MODAL -->
+    <div id="premiumModal"
+        class="hidden fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-50">
+
+        <div class="relative w-96 p-8 rounded-3xl shadow-2xl
+                bg-gradient-to-br from-indigo-900 via-purple-900 to-slate-900
+                border border-indigo-500/40">
+
+            <button onclick="closePremiumModal()"
+                class="absolute top-4 right-4 text-indigo-300 hover:text-white text-xl">
+                ✕
+            </button>
+
+            <div class="text-center">
+                <div class="text-5xl mb-4">👑</div>
+                <h2 class="text-2xl font-bold mb-3 text-indigo-300">
+                    Premium Mode Activated
+                </h2>
+                <p class="text-slate-300 text-sm mb-6">
+                    ContractClarity is now using secure, high-performance AI.
+                </p>
+                <button onclick="closePremiumModal()" class="w-full py-3 rounded-xl font-semibold
+                       bg-gradient-to-r from-indigo-500 to-purple-500
+                       hover:scale-105 transition duration-300">
+                    Continue
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FALLBACK CONFIRMATION MODAL -->
+    <div id="fallbackModal"
+        class="hidden fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-50">
+        <div class="glass w-96 p-8 rounded-3xl shadow-2xl border border-yellow-500/40 relative">
+            <div class="text-center">
+                <div class="text-5xl mb-4">⚠️</div>
+                <h2 class="text-2xl font-bold mb-3 text-yellow-300">
+                    No API Key Detected
+                </h2>
+                <p class="text-slate-300 text-sm mb-6">
+                    You haven't provided an API Key. We can perform a <span class="text-white font-semibold">Basic
+                        Rule-Based Analysis</span>, but it won't be as detailed as AI.
+                </p>
+                <div class="flex gap-3 justify-center">
+                    <button onclick="closeFallbackModal()"
+                        class="px-4 py-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition">
+                        Cancel
+                    </button>
+                    <button onclick="confirmFallbackSubmit()"
+                        class="px-6 py-2 rounded-xl font-bold text-slate-900 bg-yellow-400 hover:bg-yellow-300 transition shadow-lg">
+                        Proceed
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
-        function toggleApiInput() {
-            const box = document.getElementById("apiInputBox");
-            box.classList.toggle("hidden");
+        function enablePremium() {
+            document.getElementById("modeInput").value = "premium";
+            document.getElementById("modeBadge").innerText = "Premium Mode";
+            document.getElementById("modeBadge").classList.remove("bg-indigo-600/30");
+            document.getElementById("modeBadge").classList.add("bg-purple-600");
+
+            document.getElementById("providerBox").style.display = "none";
+            document.getElementById("modelBox").style.display = "none";
+            document.getElementById("apiBox").style.display = "none";
+
+            document.getElementById("premiumModal").classList.remove("hidden");
+        }
+
+        function closePremiumModal() {
+            document.getElementById("premiumModal").classList.add("hidden");
+        }
+
+        // Snow
+        let snowing = false;
+        let snowInterval;
+
+        function toggleSnow() {
+            const container = document.getElementById("snowContainer");
+
+            if (!snowing) {
+                snowing = true;
+                snowInterval = setInterval(createSnowflake, 20);
+            } else {
+                snowing = false;
+                clearInterval(snowInterval);
+
+                // Fade out existing snowflakes
+                const flakes = container.querySelectorAll('.snowflake');
+                flakes.forEach(flake => {
+                    flake.style.opacity = '0';
+                    flake.style.animationPlayState = 'paused'; // Optional: stop movement
+                });
+
+                // Clear container after fade out
+                setTimeout(() => {
+                    container.innerHTML = "";
+                }, 1000);
+            }
+        }
+
+        function createSnowflake() {
+            const container = document.getElementById("snowContainer");
+            const snowflake = document.createElement("div");
+            snowflake.classList.add("snowflake");
+
+            snowflake.style.left = Math.random() * window.innerWidth + "px";
+            snowflake.style.width = snowflake.style.height = (2 + Math.random() * 4) + "px";
+            snowflake.style.animationDuration = (1.5 + Math.random() * 3) + "s";
+
+            container.appendChild(snowflake);
+
+            setTimeout(() => {
+                snowflake.remove();
+            }, 5000);
+        }
+
+        function enableCustomConfig() {
+            document.getElementById("modeInput").value = "free";
+            const badge = document.getElementById("modeBadge");
+            badge.innerText = "Free Mode";
+            badge.classList.remove("bg-purple-600");
+            badge.classList.add("bg-gradient-to-r", "from-indigo-500", "to-purple-500");
+
+            document.getElementById("providerBox").style.display = "block";
+            document.getElementById("modelBox").style.display = "block";
+            document.getElementById("apiBox").style.display = "block";
+
+            document.getElementById("premiumModal").classList.add("hidden");
+        }
+
+        function closeFallbackModal() {
+            document.getElementById("fallbackModal").classList.add("hidden");
+            // Reset button state if user cancels
+            document.getElementById("btnText").innerText = "Analyze Document";
+            document.getElementById("btnLoader").classList.add("hidden");
+        }
+
+        function confirmFallbackSubmit() {
+            document.getElementById("fallbackModal").classList.add("hidden");
+            const formData = new FormData(document.getElementById("uploadForm"));
+            submitForm(formData, true);
+        }
+
+        // AJAX Submission
+        document.getElementById("uploadForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            submitForm(formData, false);
+        });
+
+        async function submitForm(formData, confirmFallback) {
+            const btnText = document.getElementById("btnText");
+            const btnLoader = document.getElementById("btnLoader");
+            const resultSection = document.getElementById("resultSection");
+            const resultContent = document.getElementById("resultContent");
+
+            // UI Loading State
+            btnText.innerText = "Analyzing...";
+            btnLoader.classList.remove("hidden");
+            resultSection.classList.add("hidden");
+            resultContent.innerText = "";
+
+            if (confirmFallback) {
+                formData.append("confirm_fallback", "true");
+            }
+
+            try {
+                const response = await fetch("/api/analyze", {
+                    method: "POST",
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+
+                const data = await response.json();
+
+                // Check for confirmation request
+                if (data.status === "confirmation_needed") {
+                    document.getElementById("fallbackModal").classList.remove("hidden");
+                    return; // Stop here, wait for user action
+                }
+
+                // Show Result
+                if (data.result) {
+                    resultContent.innerText = data.result;
+                } else if (data.result === "") {
+                    resultContent.innerText = "Analysis returned empty result.";
+                } else {
+                    resultContent.innerText = JSON.stringify(data);
+                }
+
+                resultSection.classList.remove("hidden");
+
+                // Scroll to result
+                resultSection.scrollIntoView({ behavior: "smooth" });
+
+            } catch (error) {
+                console.error("Error:", error);
+                alert("An error occurred during analysis.");
+            } finally {
+                // Only reset button if NOT showing modal
+                if (document.getElementById("fallbackModal").classList.contains("hidden")) {
+                    btnText.innerText = "Analyze Document";
+                    btnLoader.classList.add("hidden");
+                }
+            }
         }
     </script>
 
