@@ -4,7 +4,7 @@ import pdfplumber
 
 from analyzer import analyze_document
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='.')
 
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
