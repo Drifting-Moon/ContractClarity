@@ -1,4 +1,4 @@
-# ContractClarity - AI-Powered Legal Document Simplifier 
+# ContractClarity | AI-Powered Legal Document Simplifier 
 
 ![ContractClarity Banner](https://img.shields.io/badge/Status-Active-success?style=flat-square) ![Python](https://img.shields.io/badge/Python-3.9+-blue?style=flat-square) ![Flask](https://img.shields.io/badge/Flask-2.x-lightgrey?style=flat-square)
 
