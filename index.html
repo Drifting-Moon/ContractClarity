@@ -10,8 +10,9 @@
 
     <style>
         body {
-            background: radial-gradient(circle at top, #0f172a, #1e293b, #111827);
+            background: radial-gradient(circle at top, #1e1b4b, #020617, #000000);
             overflow-x: hidden;
+            color: #f8fafc;
         }
 
         /* Snow */
@@ -34,10 +35,11 @@
         }
 
         .glass {
-            background: rgba(255, 255, 255, 0.06);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
         }
 
         .glass:hover {
@@ -106,7 +108,7 @@
                 class="text-4xl font-extrabold mb-4 bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
                 Understand Your Legal Documents
             </h2>
-            <p class="text-slate-300 text-lg">
+            <p class="text-indigo-100 text-lg font-medium tracking-wide">
                 Upload any legal document and receive structured AI analysis.
                 <br>No legal expertise required.
             </p>
@@ -121,8 +123,9 @@
                 <input type="hidden" name="mode" id="modeInput" value="free">
 
                 <div id="providerBox">
-                    <label class="block text-sm mb-2 text-slate-300">AI Provider</label>
-                    <select name="provider" class="w-full p-3 rounded-xl bg-slate-800 border border-slate-600">
+                    <label class="block text-sm mb-2 text-indigo-200 font-medium">AI Provider</label>
+                    <select name="provider"
+                        class="w-full p-3 rounded-xl bg-slate-950/50 border border-slate-700 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition outline-none text-slate-200">
                         <option value="gemini">Google Gemini</option>
                         <option>OpenAI (Coming Soon)</option>
                         <option>Claude (Coming Soon)</option>
@@ -130,21 +133,22 @@
                 </div>
 
                 <div id="modelBox">
-                    <label class="block text-sm mb-2 text-slate-300">Model Name</label>
+                    <label class="block text-sm mb-2 text-indigo-200 font-medium">Model Name</label>
                     <input type="text" name="model_name"
-                        class="w-full p-3 rounded-xl bg-slate-800 border border-slate-600"
+                        class="w-full p-3 rounded-xl bg-slate-950/50 border border-slate-700 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition outline-none text-slate-200"
                         placeholder="e.g., gemini-1.5-flash">
                 </div>
 
                 <div id="apiBox">
-                    <label class="block text-sm mb-2 text-slate-300">API Key</label>
+                    <label class="block text-sm mb-2 text-indigo-200 font-medium">API Key</label>
                     <input type="password" name="custom_api_key"
-                        class="w-full p-3 rounded-xl bg-slate-800 border border-slate-600"
+                        class="w-full p-3 rounded-xl bg-slate-950/50 border border-slate-700 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition outline-none text-slate-200"
                         placeholder="Enter your API key">
                 </div>
 
-                <div class="border-2 border-dashed border-indigo-500 p-10 rounded-2xl text-center">
-                    <p class="text-slate-300 mb-4">Upload Legal Document</p>
+                <div
+                    class="border-2 border-dashed border-indigo-500/50 hover:border-indigo-400 transition p-10 rounded-2xl text-center bg-slate-900/30">
+                    <p class="text-indigo-100 font-semibold mb-4">Upload Legal Document</p>
                     <input type="file" name="file" accept=".pdf,.txt" required>
                 </div>
 
@@ -176,50 +180,62 @@
 
             <div class="grid md:grid-cols-2 gap-6">
                 <!-- Feature 1 -->
-                <div class="glass p-6 rounded-2xl border border-white/10 hover:border-indigo-500/50 transition">
+                <div class="glass p-6 rounded-2xl border border-white/10 hover:border-indigo-500/50 transition"
+                    style="background: rgba(255, 255, 255, 0.03);">
                     <div class="text-3xl mb-3">🌍</div>
-                    <h4 class="font-bold text-lg mb-2 text-indigo-200">Multi-Language Support</h4>
-                    <p class="text-slate-400 text-sm">Analyze documents in Spanish, French, German, and 50+ other
+                    <h4 class="font-bold text-lg mb-2 text-white">Multi-Language Support</h4>
+                    <p class="text-slate-300 text-sm leading-relaxed">Analyze documents in Spanish, French, German, and
+                        50+ other
                         languages instantly.</p>
                 </div>
 
                 <!-- Feature 2 -->
-                <div class="glass p-6 rounded-2xl border border-white/10 hover:border-indigo-500/50 transition">
+                <div class="glass p-6 rounded-2xl border border-white/10 hover:border-indigo-500/50 transition"
+                    style="background: rgba(255, 255, 255, 0.03);">
                     <div class="text-3xl mb-3">🔥</div>
-                    <h4 class="font-bold text-lg mb-2 text-indigo-200">Risk Heatmap</h4>
-                    <p class="text-slate-400 text-sm">Visual highlighting of dangerous clauses (Red/Yellow/Green)
+                    <h4 class="font-bold text-lg mb-2 text-white">Risk Heatmap</h4>
+                    <p class="text-slate-300 text-sm leading-relaxed">Visual highlighting of dangerous clauses
+                        (Red/Yellow/Green)
                         directly on your document.</p>
                 </div>
 
                 <!-- Feature 3 -->
-                <div class="glass p-6 rounded-2xl border border-white/10 hover:border-indigo-500/50 transition">
+                <div class="glass p-6 rounded-2xl border border-white/10 hover:border-indigo-500/50 transition"
+                    style="background: rgba(255, 255, 255, 0.03);">
                     <div class="text-3xl mb-3">💬</div>
-                    <h4 class="font-bold text-lg mb-2 text-indigo-200">Chat with Your Contract</h4>
-                    <p class="text-slate-400 text-sm">Ask questions like "Can I be fired for no reason?" and get answers
+                    <h4 class="font-bold text-lg mb-2 text-white">Chat with Your Contract</h4>
+                    <p class="text-slate-300 text-sm leading-relaxed">Ask questions like "Can I be fired for no reason?"
+                        and get answers
                         from the text.</p>
                 </div>
 
                 <!-- Contract Analytics Dashboard -->
-                <div class="glass p-6 rounded-2xl border border-white/10 hover:border-indigo-500/50 transition">
+                <div class="glass p-6 rounded-2xl border border-white/10 hover:border-indigo-500/50 transition"
+                    style="background: rgba(255, 255, 255, 0.03);">
                     <div class="text-3xl mb-3">📊</div>
-                    <h4 class="font-bold text-lg mb-2 text-indigo-200">Contract Analytics Dashboard</h4>
-                    <p class="text-slate-400 text-sm">Visualize contract risks, renewal dates, and spending across your
+                    <h4 class="font-bold text-lg mb-2 text-white">Contract Analytics Dashboard</h4>
+                    <p class="text-slate-300 text-sm leading-relaxed">Visualize contract risks, renewal dates, and
+                        spending across your
                         entire portfolio.</p>
                 </div>
 
                 <!-- OCR & Document Scanning -->
-                <div class="glass p-6 rounded-2xl border border-white/10 hover:border-indigo-500/50 transition">
+                <div class="glass p-6 rounded-2xl border border-white/10 hover:border-indigo-500/50 transition"
+                    style="background: rgba(255, 255, 255, 0.03);">
                     <div class="text-3xl mb-3">📸</div>
-                    <h4 class="font-bold text-lg mb-2 text-indigo-200">AI-Powered OCR</h4>
-                    <p class="text-slate-400 text-sm">Scan physical documents with your camera and instantly digitize
+                    <h4 class="font-bold text-lg mb-2 text-white">AI-Powered OCR</h4>
+                    <p class="text-slate-300 text-sm leading-relaxed">Scan physical documents with your camera and
+                        instantly digitize
                         them with high-accuracy text recognition.</p>
                 </div>
 
                 <!-- Feature 4 -->
-                <div class="glass p-6 rounded-2xl border border-white/10 hover:border-indigo-500/50 transition">
+                <div class="glass p-6 rounded-2xl border border-white/10 hover:border-indigo-500/50 transition"
+                    style="background: rgba(255, 255, 255, 0.03);">
                     <div class="text-3xl mb-3">⚖️</div>
-                    <h4 class="font-bold text-lg mb-2 text-indigo-200">Legal Precedent Search</h4>
-                    <p class="text-slate-400 text-sm">Automatically find relevant court cases and past rulings that
+                    <h4 class="font-bold text-lg mb-2 text-white">Legal Precedent Search</h4>
+                    <p class="text-slate-300 text-sm leading-relaxed">Automatically find relevant court cases and past
+                        rulings that
                         apply to your specific clauses.</p>
                 </div>
             </div>
