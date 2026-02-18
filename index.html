@@ -11,7 +11,7 @@
 
     <style>
         body {
-            background: radial-gradient(circle at top, #1e1b4b, #020617, #000000);
+            background: radial-gradient(circle at top, #312e81, #1e1b4b, #0f172a);
             overflow-x: hidden;
             color: #f8fafc;
         }
@@ -113,7 +113,9 @@
 
             <div>
                 <h1 class="font-bold text-xl">ContractClarity</h1>
-                <p class="text-xs text-slate-400">AI-Powered Legal Document Simplifier </p>
+                <p class="mt-2 text-xs text-slate-400">Supported: PDF, DOCX, TXT, Images</p>
+                <p class="mt-1 text-[10px] text-slate-500 font-mono">Max Size: 16MB • <span class="text-indigo-400/70"
+                        title="Gemini 1.5 Flash supports 1M+ tokens">No Word Limit (1M+ Tokens)</span></p>
             </div>
         </div>
 
@@ -165,6 +167,73 @@
         </div>
     </section>
 
+    <!-- FEATURES / CAPABILITIES -->
+    <section class="mt-12 px-6 relative z-50">
+        <div class="max-w-6xl mx-auto">
+            <h3 class="text-2xl font-bold text-center mb-8 text-indigo-200 opacity-80">
+                Packed with Power 🚀
+            </h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                <!-- Risk Scoring -->
+                <div class="glass p-5 rounded-2xl border border-white/10 hover:border-indigo-500/50 transition transform hover:-translate-y-1"
+                    style="background: rgba(255, 255, 255, 0.03);">
+                    <div class="text-2xl mb-2">🚨</div>
+                    <h4 class="font-bold text-base mb-1 text-white">Risk Assessment</h4>
+                    <p class="text-slate-300 text-xs leading-relaxed">
+                        Quantifies risk (0-100) by detecting dangerous terms like
+                        <span class="text-indigo-300">"Unlimited Liability"</span>.
+                    </p>
+                </div>
+
+                <!-- Visual Highlighting (NEW) -->
+                <div class="glass p-5 rounded-2xl border border-white/10 hover:border-indigo-500/50 transition transform hover:-translate-y-1"
+                    style="background: rgba(255, 255, 255, 0.03);">
+                    <div class="text-2xl mb-2">🖍️</div>
+                    <h4 class="font-bold text-base mb-1 text-white">Visual Highlighting</h4>
+                    <p class="text-slate-300 text-xs leading-relaxed">
+                        See exactly where the risks are. We mark dangerous clauses in
+                        <span class="text-red-400 font-semibold">RED</span> directly on your PDF.
+                    </p>
+                </div>
+
+                <!-- Multi-Format Support -->
+                <div class="glass p-5 rounded-2xl border border-white/10 hover:border-indigo-500/50 transition transform hover:-translate-y-1"
+                    style="background: rgba(255, 255, 255, 0.03);">
+                    <div class="text-2xl mb-2">📄</div>
+                    <h4 class="font-bold text-base mb-1 text-white">Universal Files</h4>
+                    <p class="text-slate-300 text-xs leading-relaxed">
+                        We support:
+                        <span class="inline-block bg-slate-700 px-1 rounded mt-1">PDF</span>
+                        <span class="inline-block bg-slate-700 px-1 rounded mt-1">DOCX</span>
+                        <span class="inline-block bg-slate-700 px-1 rounded mt-1">Images</span>
+                    </p>
+                </div>
+
+                <!-- OCR Capability -->
+                <div class="glass p-5 rounded-2xl border border-white/10 hover:border-indigo-500/50 transition transform hover:-translate-y-1"
+                    style="background: rgba(255, 255, 255, 0.03);">
+                    <div class="text-2xl mb-2">📸</div>
+                    <h4 class="font-bold text-base mb-1 text-white">Smart OCR</h4>
+                    <p class="text-slate-300 text-xs leading-relaxed">
+                        Scan physical paper contracts? No problem. Our AI reads text from images.
+                    </p>
+                </div>
+
+                <!-- Instant Summaries -->
+                <div class="glass p-5 rounded-2xl border border-white/10 hover:border-indigo-500/50 transition transform hover:-translate-y-1"
+                    style="background: rgba(255, 255, 255, 0.03);">
+                    <div class="text-2xl mb-2">⚡</div>
+                    <h4 class="font-bold text-base mb-1 text-white">Instant Summaries</h4>
+                    <p class="text-slate-300 text-xs leading-relaxed">
+                        Plain-English explanations of complex legalese in seconds.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- UPLOAD SECTION -->
     <section class="mt-16 px-6 relative z-50">
         <div class="glass max-w-3xl mx-auto p-10 rounded-3xl">
@@ -198,8 +267,12 @@
 
                 <div
                     class="border-2 border-dashed border-indigo-500/50 hover:border-indigo-400 transition p-10 rounded-2xl text-center bg-slate-900/30">
-                    <p class="text-indigo-100 font-semibold mb-4">Upload Legal Document</p>
-                    <input type="file" name="file" accept=".pdf,.txt" required>
+                    <p class="text-indigo-100 font-semibold mb-4">Upload Legal Document (PDF, Word, or Image)</p>
+                    <input type="file" name="file" accept=".pdf,.txt,.docx,.jpg,.jpeg,.png,.webp" required>
+                    <p class="mt-4 text-[10px] text-slate-400 font-mono tracking-wide">
+                        MAX SIZE: 16MB • <span class="text-indigo-400" title="Gemini 1.5 Flash supports 1M+ tokens">
+                        </span>
+                    </p>
                 </div>
 
                 <button type="submit" class="w-full bg-gradient-to-r from-indigo-500 to-purple-500
@@ -217,77 +290,104 @@
                 Document Analysis
             </h3>
             <div id="resultContent" class="whitespace-pre-wrap text-slate-200 text-sm leading-relaxed"></div>
+
+            <!-- Download Highlighted PDF -->
+            <div id="downloadSection" class="hidden mt-8 pt-6 border-t border-white/10">
+                <h4 class="text-lg font-bold text-indigo-300 mb-4">Risk Visualization 🟥</h4>
+                <p class="text-sm text-slate-400 mb-4">
+                    We found risky clauses in your document. Download the highlighted PDF to see exactly where they are.
+                </p>
+                <a id="downloadBtn" href="#" target="_blank"
+                    class="inline-flex items-center gap-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/50 px-6 py-3 rounded-xl transition">
+                    <span>📥</span> Download Highlighted Contract
+                </a>
+            </div>
+
         </div>
     </section>
 
-    <!-- ROADMAP -->
-    <section class="mt-20 px-6 relative z-50">
-        <div class="max-w-4xl mx-auto">
+
+
+    <!-- FUTURE ROADMAP -->
+    <section class="mt-20 px-6 relative z-50 mb-20">
+        <div class="max-w-6xl mx-auto">
             <h3
-                class="text-3xl font-bold text-center mb-10 bg-gradient-to-r from-pink-400 to-indigo-400 bg-clip-text text-transparent">
+                class="text-3xl font-bold text-center mb-12 text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-purple-300">
                 Future Roadmap 🚀
             </h3>
 
-            <div class="grid md:grid-cols-2 gap-6">
-                <!-- Feature 1 -->
-                <div class="glass p-6 rounded-2xl border border-white/10 hover:border-indigo-500/50 transition"
-                    style="background: rgba(255, 255, 255, 0.03);">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                <!-- 1. Multi-Language Support -->
+                <div
+                    class="glass p-6 rounded-2xl border border-white/10 hover:border-indigo-500/50 transition transform hover:-translate-y-1 text-center md:text-left">
                     <div class="text-3xl mb-3">🌍</div>
-                    <h4 class="font-bold text-lg mb-2 text-white">Multi-Language Support</h4>
-                    <p class="text-slate-300 text-sm leading-relaxed">Analyze documents in Spanish, French, German, and
-                        50+ other
-                        languages instantly.</p>
+                    <h4 class="text-lg font-bold text-blue-300 mb-2">Multi-Language Support</h4>
+                    <p class="text-slate-300 text-sm leading-relaxed">
+                        Analyze contracts in Spanish, French, German, and Mandarin with native risk detection.
+                    </p>
                 </div>
 
-                <!-- Feature 2 -->
-                <div class="glass p-6 rounded-2xl border border-white/10 hover:border-indigo-500/50 transition"
-                    style="background: rgba(255, 255, 255, 0.03);">
-                    <div class="text-3xl mb-3">🔥</div>
-                    <h4 class="font-bold text-lg mb-2 text-white">Risk Heatmap</h4>
-                    <p class="text-slate-300 text-sm leading-relaxed">Visual highlighting of dangerous clauses
-                        (Red/Yellow/Green)
-                        directly on your document.</p>
+                <!-- 2. User Accounts -->
+                <div
+                    class="glass p-6 rounded-2xl border border-white/10 hover:border-indigo-500/50 transition transform hover:-translate-y-1 text-center md:text-left">
+                    <div class="text-3xl mb-3">👤</div>
+                    <h4 class="text-lg font-bold text-indigo-300 mb-2">User Accounts</h4>
+                    <p class="text-slate-300 text-sm leading-relaxed">
+                        Create a secure account to save your analysis history and access past reports anytime.
+                    </p>
                 </div>
 
-                <!-- Feature 3 -->
-                <div class="glass p-6 rounded-2xl border border-white/10 hover:border-indigo-500/50 transition"
-                    style="background: rgba(255, 255, 255, 0.03);">
-                    <div class="text-3xl mb-3">💬</div>
-                    <h4 class="font-bold text-lg mb-2 text-white">Chat with Your Contract</h4>
-                    <p class="text-slate-300 text-sm leading-relaxed">Ask questions like "Can I be fired for no reason?"
-                        and get answers
-                        from the text.</p>
+                <!-- 3. Export Options -->
+                <div
+                    class="glass p-6 rounded-2xl border border-white/10 hover:border-indigo-500/50 transition transform hover:-translate-y-1 text-center md:text-left">
+                    <div class="text-3xl mb-3">📄</div>
+                    <h4 class="text-lg font-bold text-teal-300 mb-2">Word & PDF Export</h4>
+                    <p class="text-slate-300 text-sm leading-relaxed">
+                        Download your risk assessment as an editable Word document or a polished PDF report.
+                    </p>
                 </div>
 
-                <!-- Contract Analytics Dashboard -->
-                <div class="glass p-6 rounded-2xl border border-white/10 hover:border-indigo-500/50 transition"
-                    style="background: rgba(255, 255, 255, 0.03);">
-                    <div class="text-3xl mb-3">📊</div>
-                    <h4 class="font-bold text-lg mb-2 text-white">Contract Analytics Dashboard</h4>
-                    <p class="text-slate-300 text-sm leading-relaxed">Visualize contract risks, renewal dates, and
-                        spending across your
-                        entire portfolio.</p>
+                <!-- 4. Custom Risk Rules -->
+                <div
+                    class="glass p-6 rounded-2xl border border-white/10 hover:border-indigo-500/50 transition transform hover:-translate-y-1 text-center md:text-left">
+                    <div class="text-3xl mb-3">⚙️</div>
+                    <h4 class="text-lg font-bold text-purple-300 mb-2">Custom Risk Rules</h4>
+                    <p class="text-slate-300 text-sm leading-relaxed">
+                        Define your own "red flag" keywords (e.g., "non-compete") to customize the analysis.
+                    </p>
                 </div>
 
-                <!-- OCR & Document Scanning -->
-                <div class="glass p-6 rounded-2xl border border-white/10 hover:border-indigo-500/50 transition"
-                    style="background: rgba(255, 255, 255, 0.03);">
-                    <div class="text-3xl mb-3">📸</div>
-                    <h4 class="font-bold text-lg mb-2 text-white">AI-Powered OCR</h4>
-                    <p class="text-slate-300 text-sm leading-relaxed">Scan physical documents with your camera and
-                        instantly digitize
-                        them with high-accuracy text recognition.</p>
-                </div>
-
-                <!-- Feature 4 -->
-                <div class="glass p-6 rounded-2xl border border-white/10 hover:border-indigo-500/50 transition"
-                    style="background: rgba(255, 255, 255, 0.03);">
+                <!-- 5. Contract Comparison -->
+                <div
+                    class="glass p-6 rounded-2xl border border-white/10 hover:border-indigo-500/50 transition transform hover:-translate-y-1 text-center md:text-left">
                     <div class="text-3xl mb-3">⚖️</div>
-                    <h4 class="font-bold text-lg mb-2 text-white">Legal Precedent Search</h4>
-                    <p class="text-slate-300 text-sm leading-relaxed">Automatically find relevant court cases and past
-                        rulings that
-                        apply to your specific clauses.</p>
+                    <h4 class="text-lg font-bold text-pink-300 mb-2">Contract Comparison</h4>
+                    <p class="text-slate-300 text-sm leading-relaxed">
+                        Upload two versions of a contract to investigate exactly what clauses have changed.
+                    </p>
                 </div>
+
+                <!-- 6. Bulk Analysis -->
+                <div
+                    class="glass p-6 rounded-2xl border border-white/10 hover:border-indigo-500/50 transition transform hover:-translate-y-1 text-center md:text-left">
+                    <div class="text-3xl mb-3">�</div>
+                    <h4 class="text-lg font-bold text-orange-300 mb-2">Bulk Analysis</h4>
+                    <p class="text-slate-300 text-sm leading-relaxed">
+                        Need to check 50 contracts? Upload them all at once for a batch risk report.
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- Final Vision -->
+            <div class="text-center mt-16 max-w-3xl mx-auto">
+                <h4 class="text-lg font-semibold text-white mb-2">Final Vision</h4>
+                <p class="text-slate-400 text-sm leading-relaxed">
+                    The ultimate goal is to evolve ContractClarity from a document analyzer into a comprehensive
+                    AI-driven contract intelligence system capable of assisting individuals, businesses,
+                    and legal professionals in making safer and more informed decisions.
+                </p>
             </div>
         </div>
     </section>
@@ -459,6 +559,7 @@
             btnText.innerText = "Analyzing...";
             btnLoader.classList.remove("hidden");
             resultSection.classList.add("hidden");
+            document.getElementById("downloadSection").classList.add("hidden");
             resultContent.innerText = "";
 
             if (confirmFallback) {
@@ -472,7 +573,8 @@
                 });
 
                 if (!response.ok) {
-                    throw new Error("Network response was not ok");
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || "Network response was not ok");
                 }
 
                 const data = await response.json();
@@ -483,15 +585,38 @@
                     return; // Stop here, wait for user action
                 }
 
+                // Custom Renderer for Risk Score
+                const renderer = new marked.Renderer();
+                const originalHeading = renderer.heading.bind(renderer);
+
+                renderer.heading = function (text, level) {
+                    // Check if this is our Risk Score Header (Safe Check)
+                    if (text && typeof text === 'string' && text.includes('Contract Risk Assessment')) {
+                        return `<div class="p-6 mb-8 rounded-2xl bg-slate-800/50 border border-slate-700">
+                            <h2 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-orange-400 mb-4">
+                                ${text}
+                            </h2>`;
+                    }
+                    return originalHeading(text, level);
+                };
+
                 // Show Result
                 if (data.result) {
                     // Parse Markdown to HTML
-                    resultContent.innerHTML = marked.parse(data.result);
+                    resultContent.innerHTML = marked.parse(data.result, { renderer: renderer });
                     resultContent.classList.add("markdown-result");
                 } else if (data.result === "") {
                     resultContent.innerText = "Analysis returned empty result.";
                 } else {
                     resultContent.innerText = JSON.stringify(data);
+                }
+
+                // Show Download Link if available
+                if (data.highlighted_pdf) {
+                    const downloadSection = document.getElementById("downloadSection");
+                    const downloadBtn = document.getElementById("downloadBtn");
+                    downloadBtn.href = "/uploads/" + data.highlighted_pdf;
+                    downloadSection.classList.remove("hidden");
                 }
 
                 resultSection.classList.remove("hidden");
@@ -501,7 +626,7 @@
 
             } catch (error) {
                 console.error("Error:", error);
-                alert("An error occurred during analysis.");
+                alert("Error: " + error.message);
             } finally {
                 // Only reset button if NOT showing modal
                 if (document.getElementById("fallbackModal").classList.contains("hidden")) {

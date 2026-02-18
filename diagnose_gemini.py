@@ -1,89 +1,78 @@
-
-import google.generativeai as genai
 import os
 import sys
+from google import genai
+from dotenv import load_dotenv
 
-def test_api_key():
-    print("--- Gemini API Diagnosis ---")
-    
-    # Check library version
-    try:
-        import importlib.metadata
-        version = importlib.metadata.version("google-generativeai")
-        print(f"google-generativeai version: {version}")
-    except Exception as e:
-        print(f"Could not determine library version: {e}")
+# Load .env file
+load_dotenv()
 
-    api_key = input("Please enter your Gemini API Key: ").strip()
+def diagnose():
+    print("🔍 DIAGNOSING GEMINI API CONNECTION (NEW SDK)...")
+
+    # Try to get key from env or input
+    api_key = os.getenv("GEMINI_API_KEY")
+    if not api_key:
+        api_key = input("Please enter your Gemini API Key: ").strip()
     
     if not api_key:
-        print("Error: No API Key provided.")
+        print("❌ ERROR: No API Key provided.")
         return
 
-    print(f"\nChecking available models...")
-    try:
-        genai.configure(api_key=api_key)
-        
-        available_models = []
-        for m in genai.list_models():
-            if 'generateContent' in m.supported_generation_methods:
-                print(f"- {m.name}")
-                available_models.append(m.name)
-        
-        if not available_models:
-            print("\n❌ NO MODELS FOUND that support generateContent.")
-            return
+    print(f"✅ Found API Key: {api_key[:4]}...{api_key[-4:]}")
 
-        print(f"\n🔎 Testing models to find one that works (skipping 429/404 errors)...")
+    try:
+        client = genai.Client(api_key=api_key)
+        
+        # New SDK doesn't have a simple "list_models" like the old one that returns iterable easily in same format.
+        # We will instead test the most common models directly.
+        
+        models_to_test = [
+            "gemini-1.5-flash",
+            "gemini-1.5-pro",
+            "gemini-1.0-pro",
+            "gemini-2.0-flash-exp"
+        ]
+
+        print("\n� Testing connectivity with common models...")
         
         working_model = None
 
-        # Prioritize flash/lite models as they are usually faster/cheaper
-        # Sort to put 'flash' or 'lite' first
-        sorted_models = sorted(available_models, key=lambda x: 0 if 'flash' in x or 'lite' in x else 1)
-
-        for model_name in sorted_models:
-            print(f"   Testing: {model_name} ... ", end="", flush=True)
+        for model_name in models_to_test:
+            print(f"\n👉 Testing Model: {model_name}")
             try:
-                model = genai.GenerativeModel(model_name)
-                response = model.generate_content("Hi")
+                response = client.models.generate_content(
+                    model=model_name,
+                    contents="Hello, are you working?"
+                )
                 
-                if hasattr(response, 'text'):
-                     print("✅ WORKING!")
-                     working_model = model_name
-                     break
+                if response.text:
+                    print(f"   ✅ SUCCESS! Response: {response.text[:50]}...")
+                    if not working_model:
+                        working_model = model_name
                 else:
-                     print("❓ (No text returned)")
+                    print("   ⚠️  No text returned.")
 
             except Exception as e:
-                if "429" in str(e) or "ResourceExhausted" in str(e):
-                    print("⛔ Rate Limit (429)")
-                elif "404" in str(e) or "NotFound" in str(e):
-                     print("❌ Not Found (404)")
+                # Check for rate limits or other specific new SDK errors
+                error_msg = str(e)
+                if "429" in error_msg:
+                    print("   ⛔ Rate Limit (429)")
+                elif "404" in error_msg:
+                    print(f"   ❌ Not Found (404) - Model might not be available for this key")
                 else:
-                    print(f"❌ Error: {type(e).__name__}")
-        
-        if working_model:
+                    print(f"   ❌ FAILED: {error_msg}")
+                                
+        if working_model:                                                                    
             print(f"\n🎉 FOUND A WORKING MODEL: {working_model}")
             print(f"👉 Please enter this model name in the website: {working_model}")
-        else:
-            print("\n❌ ALL models failed. Check your billing/quota status in Google AI Studio.")
+        else:                                                                  
+            print("\n❌ ALL tested models failed. Check your billing/quota status in Google AI Studio.")
             return
-            
+                                                    
     except Exception as e:
-        print("\n❌ FAILURE: API Call Failed")
+        print("\n❌ FAILURE: API Client Initialization Failed")
         print(f"Error Type: {type(e).__name__}")
         print(f"Error Message: {str(e)}")
-        
-        if "400" in str(e):
-            print("\nPossible causes: API Key invalid, Project not enabled, or Billing issue.")
-        elif "403" in str(e):
-            print("\nPossible causes: Permission denied. Key might be restricted.")
-        elif "404" in str(e):
-            print("\nPossible causes: Model not found. 'gemini-1.5-flash' might not be available to this key.")
-        
-        import traceback
-        traceback.print_exc()
 
 if __name__ == "__main__":
-    test_api_key()
+    diagnose()
