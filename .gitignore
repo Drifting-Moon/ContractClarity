@@ -13,3 +13,11 @@ __pycache__/
 
 # macOS
 .DS_Store
+
+# Logs
+*.log
+
+# Generated Documents
+*.docx
+*.pdf
+!high_risk_contract.pdf
