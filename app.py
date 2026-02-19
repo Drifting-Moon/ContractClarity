@@ -200,7 +200,11 @@ def not_found(error):
 
 @app.errorhandler(500)
 def internal_error(error):
-    return jsonify({"error": "Internal Server Error"}), 500
+    import traceback
+    import sys
+    print(f"[CRITICAL] Internal Server Error: {error}", file=sys.stderr)
+    traceback.print_exc(file=sys.stderr)
+    return jsonify({"error": f"Internal Server Error: {str(error)}"}), 500
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
