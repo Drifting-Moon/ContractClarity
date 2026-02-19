@@ -4,7 +4,7 @@ from google.api_core import exceptions
 from dotenv import load_dotenv
 import threading
 import time
-from rule_based import rule_based_analysis
+from .rule_based import rule_based_analysis
 
 load_dotenv()
 

@@ -7,8 +7,8 @@ from docx import Document
 from PIL import Image
 import io
 
-from analyzer import analyze_document, calculate_risk_score
-from highlighter import highlight_risky_clauses
+from utils.analyzer import analyze_document, calculate_risk_score
+from utils.highlighter import highlight_risky_clauses
 
 app = Flask(__name__, template_folder='.')
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB limit
@@ -121,6 +121,10 @@ def process_upload(request):
             "risk_score": risk_data,
             "highlighted_pdf": highlighted_pdf_path
         }
+
+        # Fix: Propagate status to top level for frontend handling
+        if isinstance(analysis_result, dict) and "status" in analysis_result:
+            response_data["status"] = analysis_result["status"]
             
         return jsonify(response_data)
 

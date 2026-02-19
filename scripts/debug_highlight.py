@@ -1,6 +1,10 @@
-from highlighter import highlight_risky_clauses
-import os
 import sys
+import os
+
+# Add parent directory to path to find utils
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from utils.highlighter import highlight_risky_clauses
 
 pdf_path = "high_risk_contract.pdf"
 flags = ["Indemnify", "Unlimited Liability", "Arbitration"]
