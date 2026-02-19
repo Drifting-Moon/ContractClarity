@@ -25,6 +25,7 @@ __pycache__/
 # Generated Documents
 *.docx
 *.pdf
+!Law_Contract.pdf
 
 # Distribution / packaging
 build/
