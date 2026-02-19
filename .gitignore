@@ -1,5 +1,6 @@
 # Virtual Environment
 venv/
+.venv/
 
 # Environment variables
 .env
@@ -14,6 +15,10 @@ __pycache__/
 # macOS
 .DS_Store
 
+# IDE
+.vscode/
+.idea/
+
 # Logs
 *.log
 
@@ -21,3 +26,8 @@ __pycache__/
 *.docx
 *.pdf
 !high_risk_contract.pdf
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
