@@ -37,7 +37,8 @@ def analyze_document(text, image_parts=None, mode="free", provider="gemini", mod
              return "⚠️ **Warning:** Premium AI key not configured on server. \n\n" + rule_based_analysis(text)
 
         api_key = DEFAULT_API_KEY
-        model_to_use = "gemini-1.5-flash"  # your premium default model
+        # Fix: Use the passed model_name if available, otherwise default to a valid one
+        model_to_use = model_name if model_name else "gemini-flash-latest"
 
 
     # ---------------- FREE MODE ----------------
@@ -57,7 +58,7 @@ def analyze_document(text, image_parts=None, mode="free", provider="gemini", mod
         if provider != "gemini":
             return f"{provider} integration coming soon. Currently only Gemini is supported."
 
-        model_to_use = model_name if model_name else "gemini-flash-lite-latest"
+        model_to_use = model_name if model_name else "gemini-flash-latest"
 
 
     # ---------------- AI EXECUTION ----------------
@@ -81,9 +82,9 @@ def analyze_document(text, image_parts=None, mode="free", provider="gemini", mod
             contents.append(prompt)
 
             # Generate content using new SDK
-            # Add simple retry logic for ServiceUnavailable (503)
+            # Add simple retry logic for ServiceUnavailable (503) AND Rate Limit (429)
             max_retries = 3
-            retry_delay = 2 # seconds
+            retry_delay = 5 # seconds
 
             for attempt in range(max_retries):
                 try:
@@ -94,14 +95,14 @@ def analyze_document(text, image_parts=None, mode="free", provider="gemini", mod
                     break # Success!
                 except Exception as e:
                     error_str = str(e)
-                    # Check for 503 Service Unavailable or Resource Exhausted
-                    if "503" in error_str or "ServiceUnavailable" in error_str or "server_error" in error_str:
+                    # Check for 503 (Service Unavailable) OR 429 (Rate Limit / Resource Exhausted)
+                    if "503" in error_str or "ServiceUnavailable" in error_str or "server_error" in error_str or "429" in error_str or "ResourceExhausted" in error_str:
                         if attempt < max_retries - 1:
-                            print(f"[WARNING] Gemini 503 Error. Retrying in {retry_delay}s... (Attempt {attempt+1}/{max_retries})")
+                            print(f"[WARNING] API Error (503/429). Retrying in {retry_delay}s... (Attempt {attempt+1}/{max_retries})")
                             time.sleep(retry_delay)
                             retry_delay *= 2 # Exponential backoff
                             continue
-                    raise e # Re-raise if not 503 or max retries reached
+                    raise e # Re-raise if not retryable or max retries reached
 
         # --- RISK SCORING ALGORITHM ---
         # Calculate algorithmic score regardless of AI result

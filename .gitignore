@@ -25,7 +25,6 @@ __pycache__/
 # Generated Documents
 *.docx
 *.pdf
-!high_risk_contract.pdf
 
 # Distribution / packaging
 build/

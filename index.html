@@ -164,6 +164,16 @@
                     Know exactly what you're agreeing to.
                 </span>
             </p>
+
+            <div class="mt-8">
+                <button onclick="startDemo()"
+                    class="bg-gradient-to-r from-red-500 to-orange-500 hover:scale-105 transition text-white font-bold px-8 py-3 rounded-xl shadow-lg border border-red-400/30">
+                    ⚡ Try Live Demo
+                </button>
+                <p class="text-xs text-slate-500 mt-2">
+                    Uses pre-loaded contract & our API key
+                </p>
+            </div>
         </div>
     </section>
 
@@ -545,9 +555,47 @@
         // AJAX Submission
         document.getElementById("uploadForm").addEventListener("submit", function (e) {
             e.preventDefault();
+
+            // Hack for Demo Mode: If mode is demo, we don't need a file
+            if (document.getElementById("modeInput").value !== "demo") {
+                const fileInput = document.querySelector('input[name="file"]');
+                if (fileInput && !fileInput.value) {
+                    alert("Please select a file to analyze.");
+                    return;
+                }
+            }
+
             const formData = new FormData(e.target);
             submitForm(formData, false);
         });
+
+        function startDemo() {
+            // 0. Enable Custom Config (shows API key input)
+            // MUST be first because it resets mode to 'free'
+            enableCustomConfig();
+
+            // 1. Set Mode to 'demo' (overriding 'free')
+            document.getElementById("modeInput").value = "demo";
+
+            // 2. Update UI to show "Demo File Selected"
+            const fileInputContainer = document.querySelector('input[name="file"]').parentNode;
+            fileInputContainer.innerHTML = `
+                <div class="text-green-400 font-bold text-xl mb-2">✅ Demo Contract Selected</div>
+                <p class="text-indigo-200">Law Contract Sample (Preview)</p>
+                <p class="text-xs text-slate-400 mt-2">Ready for analysis</p>
+                <!-- Hidden input to bypass required check if we remove the file input -->
+                <input type="hidden" name="demo_active" value="true">
+            `;
+
+            // 4. Update Button Text
+            document.getElementById("btnText").innerText = "Run Demo Analysis";
+
+            // 5. Scroll to Form
+            document.getElementById("uploadForm").scrollIntoView({ behavior: "smooth" });
+
+            // 6. Focus API Key
+            document.getElementsByName("custom_api_key")[0].focus();
+        }
 
         async function submitForm(formData, confirmFallback) {
             const btnText = document.getElementById("btnText");

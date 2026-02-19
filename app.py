@@ -44,6 +44,44 @@ def process_upload(request):
     custom_api_key = request.form.get("custom_api_key", "").strip()
     confirm_fallback = request.form.get("confirm_fallback") == "true"
 
+    # --- DEMO MODE ---
+    if mode == "demo":
+        print(f"[DEBUG] Demo Mode Triggered. Custom Key Provided: {bool(custom_api_key)}")
+        
+        # Use simple filenames for demo
+        demo_filename = "Law_Contract.pdf"
+        
+        if not os.path.exists(demo_filename):
+             print(f"[ERROR] Demo file missing: {demo_filename}")
+             return jsonify({"error": "Demo file not found on server."}), 500
+        
+        # Copy to uploads just to keep logic consistent
+        import shutil
+        filepath = os.path.join(UPLOAD_FOLDER, demo_filename)
+        shutil.copy(demo_filename, filepath)
+        
+        # LOGIC:
+        # If user provides a key, we use "free" mode (which uses custom_api_key)
+        # If NOT, we use "premium" mode (which uses server key)
+        
+        if custom_api_key:
+            mode = "free"
+            # provider/model come from form, BUT if form didn't send them (e.g. simplified demo request), we should default them
+            if not provider: provider = "gemini"
+            if not model_name: model_name = "gemini-flash-lite-latest"
+        else:
+            mode = "premium" 
+            provider = "gemini"
+            # User request: Match Free Tier model (Lite) to ensure same behavior/limits
+            model_name = "gemini-flash-lite-latest" 
+        
+        # Bypass "if not file:" check
+        class DummyFile:
+            filename = demo_filename
+            def save(self, path): pass 
+        
+        file = DummyFile()
+
     if not file:
         return "No file uploaded."
 
@@ -52,7 +90,6 @@ def process_upload(request):
 
     text = ""
     image_parts = None
-    # result = "" # This variable is no longer used for the final return value directly
 
     try:
         ext = filepath.lower()
@@ -145,11 +182,9 @@ def process_upload(request):
         if os.path.exists(filepath):
             os.remove(filepath)
             
-    # This return is technically unreachable if the try block always returns jsonify or raises an exception
-    # return result
 
 
-@app.route("/api/analyze", methods=["POST"])
+
 @app.route("/api/analyze", methods=["POST"])
 def api_analyze():
     return process_upload(request)
@@ -161,6 +196,5 @@ def uploaded_file(filename):
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
-    # app.run(host="0.0.0.0", port=port, debug=True) 
     # Production: Use Gunicorn via start.sh
     app.run(debug=True, port=port)
