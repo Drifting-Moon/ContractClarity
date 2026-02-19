@@ -621,8 +621,19 @@
                 });
 
                 if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error || "Network response was not ok");
+                    let errorMsg = "Network response was not ok";
+                    try {
+                        const errorData = await response.json();
+                        errorMsg = errorData.error || errorMsg;
+                    } catch (e) {
+                        // If JSON parse fails, read text (likely HTML error page)
+                        const text = await response.text();
+                        // Extract title if HTML
+                        const titleMatch = text.match(/<title>(.*?)<\/title>/i);
+                        const title = titleMatch ? titleMatch[1] : text.substring(0, 50);
+                        errorMsg = `Server Error (${response.status}): ${title}`;
+                    }
+                    throw new Error(errorMsg);
                 }
 
                 const data = await response.json();
