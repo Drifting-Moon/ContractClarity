@@ -13,6 +13,8 @@
   - **Premium Mode**: Use the server-side managed API key for instant access.
 - **Advanced AI Analysis**: Powered by **Google Gemini 1.5 Flash** for deep legal insight.
 - **Rule-Based Fallback**: Intelligent regex-based analysis system that works even without an API key.
+- **Smart Risk Scoring**: Instantly calculates a risk score (0-100) based on specific legal keywords.
+- **Clause Highlighting**: Automatically highlights risky clauses in PDFs for quick review.
 - **Privacy-First Architecture**: 
   - **Zero Persistence**: Documents are processed in-memory and immediately discarded.
   - **No Database**: No user tracking or data storage.
@@ -20,7 +22,7 @@
   - Modern Glassmorphism design.
   - Interactive "Snow" effect.
   - Responsive Tailwind CSS layout.
-- **Format Support**: Handles `.pdf` and `.txt` files seamlessly.
+- **Format Support**: Handles `.pdf`, `.docx`, `.txt`, and Images seamlessly.
 
 
 ## 🏗️ Project Structure
@@ -30,6 +32,7 @@ ContractClarity/
 ├── app.py                 # Main Flask application entry point
 ├── analyzer.py            # AI integration (Google Gemini) logic
 ├── rule_based.py          # Regex-based fallback analysis logic
+├── highlighter.py         # PDF clause highlighting logic
 ├── templates/
 │   └── index.html         # Single-page application logic (HTML/JS)
 ├── static/
@@ -47,6 +50,8 @@ ContractClarity/
 - **Flask**: Web framework.
 - **Google Generative AI**: LLM for document analysis.
 - **PDFPlumber**: Robust PDF text extraction.
+- **PyMuPDF (fitz)**: High-performance PDF maniuplation and highlighting.
+- **python-docx**: Word document processing.
 - **RegEx**: Fallback pattern matching.
 
 ### Frontend
