@@ -81,28 +81,57 @@ def analyze_document(text, image_parts=None, mode="free", provider="gemini", mod
                 contents.append(image_parts)
             contents.append(prompt)
 
-            # Generate content using new SDK
-            # Add simple retry logic for ServiceUnavailable (503) AND Rate Limit (429)
-            max_retries = 3
-            retry_delay = 5 # seconds
-
-            for attempt in range(max_retries):
-                try:
-                    response = client.models.generate_content(
-                        model=model_to_use,
-                        contents=contents
-                    )
-                    break # Success!
-                except Exception as e:
-                    error_str = str(e)
-                    # Check for 503 (Service Unavailable) OR 429 (Rate Limit / Resource Exhausted)
-                    if "503" in error_str or "ServiceUnavailable" in error_str or "server_error" in error_str or "429" in error_str or "ResourceExhausted" in error_str:
-                        if attempt < max_retries - 1:
-                            print(f"[WARNING] API Error (503/429). Retrying in {retry_delay}s... (Attempt {attempt+1}/{max_retries})")
-                            time.sleep(retry_delay)
-                            retry_delay *= 2 # Exponential backoff
-                            continue
-                    raise e # Re-raise if not retryable or max retries reached
+            # Fallback Strategy for High Availability
+            # 1. Primary: Requested model (usually gemini-flash-lite-latest)
+            # 2. Secondary: gemini-flash-latest (Standard 1.5 Flash)
+            # 3. Tertiary: gemini-2.0-flash-lite (Newer, might have different quota)
+            
+            models_to_try = [model_to_use]
+            if model_to_use != "gemini-flash-latest":
+                models_to_try.append("gemini-flash-latest")
+            if model_to_use != "gemini-2.0-flash-lite":
+                models_to_try.append("gemini-2.0-flash-lite")
+            
+            # Remove duplicates preserve order
+            models_to_try = list(dict.fromkeys(models_to_try))
+            
+            success = False
+            last_error = None
+            
+            for current_model in models_to_try:
+                print(f"[INFO] Attempting to generate with model: {current_model}")
+                
+                # Retry logic PER MODEL
+                max_retries = 2 # Reduced per model since we have multiple models
+                retry_delay = 3
+                
+                for attempt in range(max_retries):
+                    try:
+                        response = client.models.generate_content(
+                            model=current_model,
+                            contents=contents
+                        )
+                        success = True
+                        break # Break retry loop
+                    except Exception as e:
+                        last_error = e
+                        error_str = str(e)
+                        # Check for 503 (Service Unavailable) OR 429 (Rate Limit / Resource Exhausted)
+                        if "503" in error_str or "ServiceUnavailable" in error_str or "server_error" in error_str or "429" in error_str or "ResourceExhausted" in error_str:
+                            if attempt < max_retries - 1:
+                                print(f"[WARNING] Model {current_model} Error (503/429). Retrying in {retry_delay}s...")
+                                time.sleep(retry_delay)
+                                retry_delay *= 2
+                                continue
+                        else:
+                            # If it's not a temporary error (e.g. 400 Invalid Argument), don't retry this model
+                            break
+                            
+                if success:
+                    break # Break model loop
+            
+            if not success:
+                raise last_error # Re-raise the last error if all models/retries failed
 
         # --- RISK SCORING ALGORITHM ---
         # Calculate algorithmic score regardless of AI result
