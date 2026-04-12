@@ -16,14 +16,21 @@ they cannot be changed or deleted.
 
 ---
 
-## Tech Stack
+## 🛠 Tech Stack
 
-| Layer      | Technology                        |
-+|------------|-----------------------------------|
-+| Frontend   | React + Vite                      |
-+| Backend    | Node.js + Express + Ethers.js     |
-+| Blockchain | Hardhat (local Ethereum node)     |
-+| Contract   | Solidity                          |
+### ⛓️ Blockchain Layer
+- **Solidity**: Smart contract language for the voting logic.
+- **Hardhat**: Local Ethereum development environment.
+- **Ethers.js**: Backend library for blockchain interaction.
+
+### 🌐 Backend (The Bridge)
+- **Node.js & Express**: Secure API to handle voter OTP and registration.
+- **Filesystem (JSON)**: Lightweight storage for voters and transaction logs.
+
+### 💻 Frontend (UI/UX)
+- **React.js**: For a dynamic, real-time results dashboard.
+- **Vite**: Ultra-fast build tool for the frontend.
+- **Vanilla CSS**: Custom professional dark-mode styling.
 
 ---
 
