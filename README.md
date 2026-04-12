@@ -1,44 +1,90 @@
-# VoteChain
+# EtherVote — Blockchain Voting System
 
-A simple decentralized voting system built with Hardhat, React, and Node.js. It uses a local blockchain to record and count votes securely.
+A decentralized voting system built for transparency and security. 
+Votes are stored on a local Ethereum blockchain — once cast, 
+they cannot be changed or deleted.
 
-## Features
-- **Blockchain Core**: Publicly verifiable votes using a Solidity smart contract.
-- **Admin Dashboard**: Add candidates and monitor live results.
-- **Voter Portal**: Gmail-based identity check and secure voting interface.
-- **Transaction Logs**: Real-time display of block numbers and transaction hashes.
+---
+
+## What It Does
+
+- Voters authenticate using OTP before voting
+- Each vote is recorded as a real blockchain transaction
+- Results update live directly from the blockchain
+- Admin can monitor all votes, candidates, and transaction logs
+- The same voter cannot vote twice — enforced by the smart contract
+
+---
 
 ## Tech Stack
-- **Frontend**: React + Vite (Vanilla CSS for styling)
-- **Backend**: Express.js + Ethers.js
-- **Blockchain**: Hardhat (local Ethereum node)
 
-## Quick Start
-To run this project locally, you need 4 terminal windows open:
+| Layer      | Technology                        |
++|------------|-----------------------------------|
++| Frontend   | React + Vite                      |
++| Backend    | Node.js + Express + Ethers.js     |
++| Blockchain | Hardhat (local Ethereum node)     |
++| Contract   | Solidity                          |
 
-1. **Start Blockchain**:
-   ```bash
-   npx hardhat node
-   ```
-2. **Deploy Contract**:
-   ```bash
-   # In another terminal after node is up
-   npx hardhat run scripts/deploy.js --network localhost
-   ```
-3. **Start Backend**:
-   ```bash
-   cd server
-   npm install
-   node server.js
-   ```
-4. **Start Frontend**:
-   ```bash
-   npm install
-   npm run dev
-   ```
+---
 
 ## Project Structure
-- `/contracts`: Solidity smart contract for voting logic.
-- `/src`: React frontend files.
-- `/server`: Express backend acting as a bridge to the blockchain.
-- `/scripts`: Deployment scripts for Hardhat.
+```text
+EtherVote/
+├── contracts/
+│   └── Voting.sol          # Smart contract
+├── scripts/
+│   └── deploy.js           # Deploys contract to local node
+├── server/
+│   └── server.js           # Backend API + blockchain bridge
+├── src/
+│   ├── App.jsx             # Main frontend logic
+│   └── ...
+├── hardhat.config.js       # Hardhat settings
+└── package.json            # Frontend & Hardhat dependencies
+```
+
+---
+
+## How to Run
+
+**Step 1 — Install dependencies**
+```bash
+npm install
+cd server && npm install
+```
+
+**Step 2 — Start local blockchain**
+```bash
+# Terminal 1
+npx hardhat node
+```
+
+**Step 3 — Deploy smart contract**
+```bash
+# Terminal 2
+npx hardhat run scripts/deploy.js --network localhost
+```
+
+**Step 4 — Start backend**
+```bash
+# Terminal 3
+cd server
+node server.js
+```
+
+**Step 5 — Start frontend**
+```bash
+# Terminal 4
+npm run dev
+```
+
+Open `http://localhost:5173` in your browser.
+
+---
+
+## Environment Variables
+Create a `.env` file in the `server/` folder if you want to use custom ports:
+```text
+PORT=5001
+RPC_URL=http://localhost:8545
+```
