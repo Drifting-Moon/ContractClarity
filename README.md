@@ -1,18 +1,44 @@
-# React + Vite
+# VoteChain
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple decentralized voting system built with Hardhat, React, and Node.js. It uses a local blockchain to record and count votes securely.
 
-Currently, two official plugins are available:
+## Features
+- **Blockchain Core**: Publicly verifiable votes using a Solidity smart contract.
+- **Admin Dashboard**: Add candidates and monitor live results.
+- **Voter Portal**: Gmail-based identity check and secure voting interface.
+- **Transaction Logs**: Real-time display of block numbers and transaction hashes.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Tech Stack
+- **Frontend**: React + Vite (Vanilla CSS for styling)
+- **Backend**: Express.js + Ethers.js
+- **Blockchain**: Hardhat (local Ethereum node)
 
-## React Compiler
+## Quick Start
+To run this project locally, you need 4 terminal windows open:
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+1. **Start Blockchain**:
+   ```bash
+   npx hardhat node
+   ```
+2. **Deploy Contract**:
+   ```bash
+   # In another terminal after node is up
+   npx hardhat run scripts/deploy.js --network localhost
+   ```
+3. **Start Backend**:
+   ```bash
+   cd server
+   npm install
+   node server.js
+   ```
+4. **Start Frontend**:
+   ```bash
+   npm install
+   npm run dev
+   ```
 
-Note: This will impact Vite dev & build performances.
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Project Structure
+- `/contracts`: Solidity smart contract for voting logic.
+- `/src`: React frontend files.
+- `/server`: Express backend acting as a bridge to the blockchain.
+- `/scripts`: Deployment scripts for Hardhat.
